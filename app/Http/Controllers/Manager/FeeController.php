@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Http\Controllers\Manager;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Manager\Fee\StoreFeeRequest;
+use App\Http\Requests\Manager\Fee\UpdateFeeRequest;
+use App\Http\Resources\FeeResource;
+use App\Models\Fee;
+
+class FeeController extends Controller
+{
+    public function index()
+    {
+        $fees = Fee::all();
+        return FeeResource::collection($fees);
+    }
+
+    public function store(StoreFeeRequest $request)
+    {
+        $fee = Fee::create($request->validated());
+        return new FeeResource($fee);
+    }
+
+    public function show(Fee $fee)
+    {
+        return new FeeResource($fee);
+    }
+
+    public function update(UpdateFeeRequest $request, Fee $fee)
+    {
+        $fee->update($request->validated());
+        return new FeeResource($fee);
+    }
+
+    public function destroy(Fee $fee)
+    {
+        $fee->delete();
+        return response()->json(null, 204);
+    }
+}

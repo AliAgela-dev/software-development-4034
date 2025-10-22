@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class School extends Model
+{
+    protected $fillable = [
+        'name',
+        'address',
+        'status',
+        'type',
+        'level',
+    ];
+
+    public function teachers()
+    {
+        return $this->belongsToMany(Teacher::class, 'schools_teachers', 'schoolID', 'teacherID')->withPivot('gradeID')->withTimestamps();
+    }
+
+    public function managers()
+    {
+        return $this->hasMany(Manager::class, 'schoolID');
+    }
+
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class, 'schoolID');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'schoolID');
+    }
+
+    public function fees()
+    {
+        return $this->hasMany(Fee::class, 'schoolID');
+    }
+}
