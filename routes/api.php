@@ -10,16 +10,26 @@ use App\Http\Controllers\User\CommentController;
 use App\Http\Controllers\Manager\SchoolTeacherController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AuthController as AdminAuthController;
+use App\Http\Controllers\Manager\AuthController as ManagerAuthController;
+use App\Http\Controllers\User\AuthController as UserAuthController;
+
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+Route::post('admin/login', [AdminAuthController::class, 'login']);
+Route::post('manager/login', [ManagerAuthController::class, 'login']);
+Route::post('user/login', [UserAuthController::class, 'login']);
+Route::post('user/register', [UserAuthController::class, 'regester']);
 
 Route::middleware('auth:admin')->group(function () {
 Route::apiResource('managers', ManagerController::class);
 Route::apiResource('schools', SchoolController::class);
 Route::apiResource('teachers', TeacherController::class);
+Route::post('logout', [AdminAuthController::class, 'logout']);
 });
 
 Route::middleware('auth:manager')->group(function () {
@@ -31,11 +41,14 @@ Route::middleware('auth:manager')->group(function () {
         Route::put('teachers/{teacher}', [SchoolTeacherController::class, 'update']);
         Route::delete('teachers/{teacher}', [SchoolTeacherController::class, 'destroy']);
     });
+    Route::post('logout', [ManagerAuthController::class, 'logout']);
+
 });
 
 Route::middleware('auth:api')->group(function () {
     Route::apiResource('ratings', RatingController::class);
     Route::apiResource('comments', CommentController::class);
+    Route::post('logout', [UserAuthController::class, 'logout']);
 });
 
 
