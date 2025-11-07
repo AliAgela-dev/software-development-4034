@@ -12,29 +12,40 @@ class RatingController extends Controller
 {
     public function index()
     {
-        $ratings = Rating::all();
+        $ratings = Rating::where('userID', auth('api')->id())->get();
         return RatingResource::collection($ratings);
     }
 
     public function store(StoreRatingRequest $request)
     {
-        $rating = Rating::create($request->validated());
+        $data = $request->validated();
+        $data['userID'] = auth('api')->id();
+        $rating = Rating::create($data);
         return new RatingResource($rating);
     }
 
     public function show(Rating $rating)
     {
+        if (auth('api')->id() !== $rating->userID) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
         return new RatingResource($rating);
     }
 
     public function update(UpdateRatingRequest $request, Rating $rating)
     {
+        if (auth('api')->id() !== $rating->userID) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
         $rating->update($request->validated());
         return new RatingResource($rating);
     }
 
     public function destroy(Rating $rating)
     {
+        if (auth('api')->id() !== $rating->userID) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
         $rating->delete();
         return response()->json(null, 204);
     }

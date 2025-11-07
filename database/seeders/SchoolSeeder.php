@@ -17,7 +17,7 @@ class SchoolSeeder extends Seeder
             'name' => 'Test School',
             'address' => '123 Test St',
             'status' => 'active',
-            'type' => 'public',
+            'type' => 'male',
             'level' => 'primary',
         ]);
     }

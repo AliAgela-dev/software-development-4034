@@ -12,13 +12,15 @@ class CommentController extends Controller
 {
     public function index()
     {
-        $comments = Comment::all();
+        $comments = Comment::where('userID', auth('api')->id())->get();
         return CommentResource::collection($comments);
     }
 
     public function store(StoreCommentRequest $request)
     {
-        $comment = Comment::create($request->validated());
+        $data = $request->validated();
+        $data['userID'] = auth('api')->id();
+        $comment = Comment::create($data);
         return new CommentResource($comment);
     }
 
@@ -29,12 +31,18 @@ class CommentController extends Controller
 
     public function update(UpdateCommentRequest $request, Comment $comment)
     {
+        if (auth('api')->id() !== $comment->userID) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
         $comment->update($request->validated());
         return new CommentResource($comment);
     }
 
     public function destroy(Comment $comment)
     {
+        if (auth('api')->id() !== $comment->userID) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
         $comment->delete();
         return response()->json(null, 204);
     }

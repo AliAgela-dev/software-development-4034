@@ -23,7 +23,6 @@ class StoreCommentRequest extends FormRequest
     {
         return [
             'schoolID' => 'required|exists:schools,id',
-            'userID' => 'required|exists:users,id',
             'comment' => 'required|string',
         ];
     }

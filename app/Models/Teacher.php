@@ -14,6 +14,6 @@ class Teacher extends Model
 
     public function schools()
     {
-        return $this->belongsToMany(School::class, 'schools_teachers', 'teacherID', 'schoolID')->withPivot('gradeID')->withTimestamps();
+        return $this->belongsToMany(School::class, 'schools_teachers', 'teacherID', 'schoolID')->withPivot('gradeID', 'year')->withTimestamps();
     }
 }

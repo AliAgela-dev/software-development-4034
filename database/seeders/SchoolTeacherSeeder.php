@@ -17,6 +17,7 @@ class SchoolTeacherSeeder extends Seeder
             'schoolID' => 1,
             'teacherID' => 1,
             'gradeID' => 1,
+            'year' => rand(2020, 2024),
         ]);
     }
 }

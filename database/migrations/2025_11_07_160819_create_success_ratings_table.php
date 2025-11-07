@@ -11,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('schools_teachers', function (Blueprint $table) {
+        Schema::create('success_ratings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('schoolID');
-            $table->unsignedBigInteger('teacherID');
             $table->unsignedBigInteger('gradeID');
-            $table->integer('year');
+            $table->integer('total_students');
+            $table->integer('A');
+            $table->integer('B');
+            $table->integer('C');
+            $table->integer('D');
             $table->timestamps();
         });
     }
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('schools_teachers');
+        Schema::dropIfExists('success_ratings');
     }
 };

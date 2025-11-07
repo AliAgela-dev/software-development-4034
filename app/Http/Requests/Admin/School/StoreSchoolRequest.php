@@ -25,7 +25,7 @@ class StoreSchoolRequest extends FormRequest
             'name' => 'required|string|max:255',
             'address' => 'nullable|string',
             'status' => 'required|in:active,inactive',
-            'type' => 'required|in:public,private',
+            'type' => 'required|in:male,female,uni_gender',
             'level' => 'required|in:primary,secondary,tertiary',
         ];
     }

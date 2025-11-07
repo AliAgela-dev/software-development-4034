@@ -15,17 +15,29 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+
+Route::middleware('auth:admin')->group(function () {
 Route::apiResource('managers', ManagerController::class);
 Route::apiResource('schools', SchoolController::class);
-Route::apiResource('grades', GradeController::class);
 Route::apiResource('teachers', TeacherController::class);
-Route::apiResource('fees', FeeController::class);
-Route::apiResource('ratings', RatingController::class);
-Route::apiResource('comments', CommentController::class);
-
 Route::prefix('schools/{school}')->group(function () {
     Route::get('teachers', [SchoolTeacherController::class, 'index']);
     Route::post('teachers', [SchoolTeacherController::class, 'store']);
     Route::put('teachers/{teacher}', [SchoolTeacherController::class, 'update']);
     Route::delete('teachers/{teacher}', [SchoolTeacherController::class, 'destroy']);
 });
+
+});
+
+Route::middleware('auth:manager')->group(function () {
+    Route::apiResource('grades', GradeController::class);
+Route::apiResource('fees', FeeController::class);
+});
+
+Route::middleware('auth:api')->group(function () {
+    Route::apiResource('ratings', RatingController::class);
+    Route::apiResource('comments', CommentController::class);
+});
+
+
+

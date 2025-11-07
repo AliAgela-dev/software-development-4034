@@ -29,6 +29,11 @@ class School extends Model
         return $this->hasMany(Rating::class, 'schoolID');
     }
 
+    public function successRatings()
+    {
+        return $this->hasMany(SuccessRating::class, 'schoolID');
+    }
+
     public function comments()
     {
         return $this->hasMany(Comment::class, 'schoolID');

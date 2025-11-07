@@ -23,7 +23,6 @@ class UpdateRatingRequest extends FormRequest
     {
         return [
             'schoolID' => 'sometimes|exists:schools,id',
-            'userID' => 'sometimes|exists:users,id',
             'rating' => 'sometimes|integer|min:1|max:5',
         ];
     }

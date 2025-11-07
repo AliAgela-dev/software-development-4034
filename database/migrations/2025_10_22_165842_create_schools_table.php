@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('address')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->enum('type', ['public', 'private'])->default('public');
+            $table->enum('type', ['female', 'male','uni_gender'])->default('public');
             $table->enum('level', ['primary', 'secondary', 'tertiary'])->default('primary');
             $table->timestamps();
         });
