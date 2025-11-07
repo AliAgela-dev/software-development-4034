@@ -25,14 +25,14 @@ Route::post('manager/login', [ManagerAuthController::class, 'login']);
 Route::post('user/login', [UserAuthController::class, 'login']);
 Route::post('user/register', [UserAuthController::class, 'regester']);
 
-Route::middleware('auth:admin')->group(function () {
+Route::middleware('auth:admin')->prefix('admin')->group(function () {
 Route::apiResource('managers', ManagerController::class);
 Route::apiResource('schools', SchoolController::class);
 Route::apiResource('teachers', TeacherController::class);
 Route::post('logout', [AdminAuthController::class, 'logout']);
 });
 
-Route::middleware('auth:manager')->group(function () {
+Route::middleware('auth:manager')->prefix('manager')->group(function () {
     Route::apiResource('grades', GradeController::class);
     Route::apiResource('fees', FeeController::class);
     Route::prefix('schools/{school}')->group(function () {
@@ -45,7 +45,7 @@ Route::middleware('auth:manager')->group(function () {
 
 });
 
-Route::middleware('auth:api')->group(function () {
+Route::middleware('auth:api')->prefix('user')->group(function () {
     Route::apiResource('ratings', RatingController::class);
     Route::apiResource('comments', CommentController::class);
     Route::post('logout', [UserAuthController::class, 'logout']);
