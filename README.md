@@ -1,61 +1,167 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+API Documentation: Roles & Capabilities
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This document outlines the different user roles in this API, what each role can do, and the endpoints they have access to.
 
-## About Laravel
+The application is built around three main user roles:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Admin: The super-user with full system-wide control.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Manager: A school-specific administrator who manages their assigned school's data.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+User: The general public user (e.g., student, parent) who can rate and comment on schools.
 
-## Learning Laravel
+1. Admin
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+The Admin is the highest-level entity, responsible for setting up the core data of the application.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Authentication
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Login: POST /api/admin/login
 
-## Laravel Sponsors
+Uses phone_number and password for credentials.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Key Responsibilities & Endpoints
 
-### Premium Partners
+Admins have system-wide Create, Read, Update, and Delete (CRUD) privileges on the foundational models:
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Manage Schools:
 
-## Contributing
+POST /api/admin/schools (Create a new school)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+GET /api/admin/schools (View all schools)
 
-## Code of Conduct
+GET /api/admin/schools/{school} (View a specific school)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+PUT /api/admin/schools/{school} (Update a school)
 
-## Security Vulnerabilities
+DELETE /api/admin/schools/{school} (Delete a school)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Manage Managers:
 
-## License
+POST /api/admin/managers (Create a new manager and assign them to a school)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+GET /api/admin/managers (View all managers)
+
+GET /api/admin/managers/{manager} (View a specific manager)
+
+PUT /api/admin/managers/{manager} (Update a manager)
+
+DELETE /api/admin/managers/{manager} (Delete a manager)
+
+Manage Teachers:
+
+POST /api/admin/teachers (Create a new teacher in the system)
+
+GET /api/admin/teachers (View all teachers)
+
+GET /api/admin/teachers/{teacher} (View a specific teacher)
+
+PUT /api/admin/teachers/{teacher} (Update a teacher)
+
+DELETE /api/admin/teachers/{teacher} (Delete a teacher)
+
+View School Success:
+
+GET /api/admin/school-success-rate (Read-only access to see all success ratings)
+
+2. Manager
+
+The Manager is a mid-level entity responsible for managing the day-to-day data of a single, specific school they are assigned to.
+
+Authentication
+
+Login: POST /api/manager/login
+
+Uses phone_number and password for credentials.
+
+Key Responsibilities & Endpoints
+
+Managers manage the entities related to their assigned school:
+
+Manage Grades:
+
+POST /api/manager/grades (Create a new grade level, e.g., "Grade 10")
+
+GET /api/manager/grades (View all grades)
+
+GET /api/manager/grades/{grade} (View a specific grade)
+
+PUT /api/manager/grades/{grade} (Update a grade)
+
+DELETE /api/manager/grades/{grade} (Delete a grade)
+
+Manage School Fees:
+
+POST /api/manager/fees (Set a fee for a specific grade at their school)
+
+GET /api/manager/fees (View all fees for their school)
+
+GET /api/manager/fees/{fee} (View a specific fee)
+
+PUT /api/manager/fees/{fee} (Update a fee)
+
+DELETE /api/manager/fees/{fee} (Delete a fee)
+
+Manage Teacher Assignments:
+
+POST /api/manager/schools/{school}/teachers (Assign an existing teacher to their school and a specific grade)
+
+GET /api/manager/schools/{school}/teachers (View all teachers assigned to their school)
+
+PUT /api/manager/schools/{school}/teachers/{teacher} (Update a teacher's assignment, e.g., change their grade)
+
+DELETE /api/manager/schools/{school}/teachers/{teacher} (Remove a teacher from their school)
+
+Manage School Success Ratings:
+
+POST /api/manager/success-ratings (Create/Report a new success rating for their school for a given year)
+
+GET /api/manager/success-ratings (View all success ratings for their school)
+
+GET /api/manager/success-ratings/{rating} (View a specific rating)
+
+PUT /api/manager/success-ratings/{rating} (Update a rating)
+
+DELETE /api/manager/success-ratings/{rating} (Delete a rating)
+
+3. User (Public)
+
+The User is the public-facing entity (e.g., parent, student) who can register, login, and provide feedback on schools.
+
+Authentication
+
+Register: POST /api/user/register
+
+Uses name, email, and password.
+
+Login: POST /api/user/login
+
+Uses email and password.
+
+Key Responsibilities & Endpoints
+
+Users can view school data and contribute their own opinions via ratings and comments:
+
+Manage Ratings:
+
+POST /api/user/ratings (Create a new rating for a school)
+
+GET /api/user/ratings (View all ratings)
+
+GET /api/user/ratings/{rating} (View a specific rating)
+
+PUT /api/user/ratings/{rating} (Update their own rating)
+
+DELETE /api/user/ratings/{rating} (Delete their own rating)
+
+Manage Comments:
+
+POST /api/user/comments (Create a new comment for a school)
+
+GET /api/user/comments (View all comments)
+
+GET /api/user/comments/{comment} (View a specific comment)
+
+PUT /api/user/comments/{comment} (Update their own comment)
+
+DELETE /api/user/comments/{comment} (Delete their own comment)
