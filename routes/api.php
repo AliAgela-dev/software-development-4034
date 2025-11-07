@@ -20,18 +20,17 @@ Route::middleware('auth:admin')->group(function () {
 Route::apiResource('managers', ManagerController::class);
 Route::apiResource('schools', SchoolController::class);
 Route::apiResource('teachers', TeacherController::class);
-Route::prefix('schools/{school}')->group(function () {
-    Route::get('teachers', [SchoolTeacherController::class, 'index']);
-    Route::post('teachers', [SchoolTeacherController::class, 'store']);
-    Route::put('teachers/{teacher}', [SchoolTeacherController::class, 'update']);
-    Route::delete('teachers/{teacher}', [SchoolTeacherController::class, 'destroy']);
-});
-
 });
 
 Route::middleware('auth:manager')->group(function () {
     Route::apiResource('grades', GradeController::class);
-Route::apiResource('fees', FeeController::class);
+    Route::apiResource('fees', FeeController::class);
+    Route::prefix('schools/{school}')->group(function () {
+        Route::get('teachers', [SchoolTeacherController::class, 'index']);
+        Route::post('teachers', [SchoolTeacherController::class, 'store']);
+        Route::put('teachers/{teacher}', [SchoolTeacherController::class, 'update']);
+        Route::delete('teachers/{teacher}', [SchoolTeacherController::class, 'destroy']);
+    });
 });
 
 Route::middleware('auth:api')->group(function () {
