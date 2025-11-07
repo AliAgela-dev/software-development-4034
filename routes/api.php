@@ -14,12 +14,6 @@ use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Manager\AuthController as ManagerAuthController;
 use App\Http\Controllers\User\AuthController as UserAuthController;
 
-
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
 Route::post('admin/login', [AdminAuthController::class, 'login']);
 Route::post('manager/login', [ManagerAuthController::class, 'login']);
 Route::post('user/login', [UserAuthController::class, 'login']);
