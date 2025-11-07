@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Admin\Manager;
 
+use App\Models\Manager;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateManagerRequest extends FormRequest
 {
@@ -21,11 +23,23 @@ class UpdateManagerRequest extends FormRequest
      */
     public function rules(): array
     {
-        $managerId = $this->route('manager');
+        $manager = $this->route('manager');
+        $managerId = $manager instanceof Manager ? $manager->getKey() : $manager;
+
         return [
             'name' => 'sometimes|string|max:255',
-            'username' => 'sometimes|string|max:255|unique:managers,username,' . $managerId,
-            'phone_number' => 'sometimes|string|max:20|unique:managers,phone_number,' . $managerId,
+            'username' => [
+                'sometimes',
+                'string',
+                'max:255',
+                Rule::unique('managers', 'username')->ignore($managerId),
+            ],
+            'phone_number' => [
+                'sometimes',
+                'string',
+                'max:20',
+                Rule::unique('managers', 'phone_number')->ignore($managerId),
+            ],
             'password' => 'sometimes|string|min:8',
             'schoolID' => 'sometimes|integer',
         ];
