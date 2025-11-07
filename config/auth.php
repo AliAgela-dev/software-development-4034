@@ -45,11 +45,11 @@ return [
             'provider' => 'users',
         ],
         'admin'=> [
-            'driver' => 'session',
+            'driver' => 'jwt',
             'provider' => 'admins',
         ],
         'manager'=> [
-            'driver' => 'session',
+            'driver' => 'jwt',
             'provider' => 'managers',
         ],
 
