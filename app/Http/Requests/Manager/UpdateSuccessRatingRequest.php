@@ -22,7 +22,6 @@ class UpdateSuccessRatingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'schoolID' => 'sometimes|integer|exists:schools,id',
             'gradeID' => 'sometimes|integer|exists:grades,id',
             'total_students' => 'sometimes|integer|min:0',
             'A' => 'sometimes|integer|min:0',

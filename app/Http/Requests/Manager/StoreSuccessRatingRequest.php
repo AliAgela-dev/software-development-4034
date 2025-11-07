@@ -22,14 +22,12 @@ class StoreSuccessRatingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'schoolID' => 'required|integer|exists:schools,id',
             'gradeID' => 'required|integer|exists:grades,id',
             'total_students' => 'required|integer|min:0',
             'A' => 'required|integer|min:0',
             'B' => 'required|integer|min:0',
             'C' => 'required|integer|min:0',
             'D' => 'required|integer|min:0',
-            'F' => 'required|integer|min:0',
         ];
     }
 }

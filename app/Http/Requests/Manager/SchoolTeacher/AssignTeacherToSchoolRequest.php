@@ -24,6 +24,7 @@ class AssignTeacherToSchoolRequest extends FormRequest
         return [
             'teacherID' => 'required|exists:teachers,id',
             'gradeID' => 'required|exists:grades,id',
+            'year' => 'required|integer',
         ];
     }
 }

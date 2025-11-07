@@ -12,20 +12,21 @@ class FeeController extends Controller
 {
     public function index()
     {
-        $fees = Fee::where('schoolID', auth('api')->user()->schoolID)->get();
+        $fees = Fee::where('schoolID', auth('manager')->user()->schoolID)->get();
         return FeeResource::collection($fees);
     }
 
     public function store(StoreFeeRequest $request)
     {
-        $request->validated()['schoolID'] = auth('api')->user()->schoolID;
-        $fee = Fee::create($request->validated());
+        $data = $request->validated();
+        $data['schoolID'] = auth('manager')->user()->schoolID;
+        $fee = Fee::create($data);
         return new FeeResource($fee);
     }
 
     public function show(Fee $fee)
     {
-        if($fee->schoolID !== auth('api')->user()->schoolID) {
+        if($fee->schoolID != auth('manager')->user()->schoolID) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
         return new FeeResource($fee);
@@ -33,7 +34,7 @@ class FeeController extends Controller
 
     public function update(UpdateFeeRequest $request, Fee $fee)
     {
-        if($fee->schoolID !== auth('api')->user()->schoolID) {
+        if($fee->schoolID !== auth('manager')->user()->schoolID) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
         $fee->update($request->validated());
@@ -42,7 +43,7 @@ class FeeController extends Controller
 
     public function destroy(Fee $fee)
     {
-        if($fee->schoolID !== auth('api')->user()->schoolID) {
+        if($fee->schoolID !== auth('manager')->user()->schoolID) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
         $fee->delete();

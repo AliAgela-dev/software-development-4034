@@ -18,6 +18,7 @@ class FeeResource extends JsonResource
             'id' => $this->id,
             'gradeID' => $this->gradeID,
             'amount' => $this->amount,
+            'schoolID'=>$this->schoolID
         ];
     }
 }

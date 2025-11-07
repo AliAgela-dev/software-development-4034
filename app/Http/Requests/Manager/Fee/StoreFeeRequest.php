@@ -22,7 +22,6 @@ class StoreFeeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'schoolID' => 'required|exists:schools,id',
             'gradeID' => 'required|exists:grades,id',
             'amount' => 'required|numeric',
         ];

@@ -23,6 +23,7 @@ class UpdateSchoolTeacherRequest extends FormRequest
     {
         return [
             'gradeID' => 'sometimes|exists:grades,id',
+            'year' => 'sometimes|integer',
         ];
     }
 }

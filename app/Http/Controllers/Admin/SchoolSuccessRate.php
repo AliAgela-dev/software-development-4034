@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Manager;
+namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SucessRatingResource;
 use App\Models\SuccessRating;
@@ -9,16 +9,16 @@ use Illuminate\Http\Request;
 
 class SchoolSuccessRate extends Controller
 {
-    public function index($schoolId)
+    public function index()
     {
         return SucessRatingResource::collection(SuccessRating::all());
     }
 
-    public function show($successRatingId)
+    public function show($schoolId)
     {
-        $successRating = SuccessRating::findOrFail($successRatingId);
+        $successRating = SuccessRating::where('schoolID', $schoolId)->get();
 
-        return new SucessRatingResource($successRating);
+        return  SucessRatingResource::collection($successRating);
     }
 
 }

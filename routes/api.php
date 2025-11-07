@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\SchoolController;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Manager\GradeController;
 use App\Http\Controllers\Manager\FeeController;
+use App\Http\Controllers\Manager\SchoolSuccessRate ;
 use App\Http\Controllers\User\RatingController;
 use App\Http\Controllers\User\CommentController;
 use App\Http\Controllers\Manager\SchoolTeacherController;
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Manager\AuthController as ManagerAuthController;
 use App\Http\Controllers\User\AuthController as UserAuthController;
+use App\Http\Controllers\Admin\SchoolSuccessRate as AdminSchoolSuccessRate;
+
 
 Route::post('admin/login', [AdminAuthController::class, 'login']);
 Route::post('manager/login', [ManagerAuthController::class, 'login']);
@@ -24,6 +27,7 @@ Route::apiResource('managers', ManagerController::class);
 Route::apiResource('schools', SchoolController::class);
 Route::apiResource('teachers', TeacherController::class);
 Route::post('logout', [AdminAuthController::class, 'logout']);
+    Route::apiResource('school-success-rate', AdminSchoolSuccessRate::class);
 });
 
 Route::middleware('auth:manager')->prefix('manager')->group(function () {
@@ -35,6 +39,7 @@ Route::middleware('auth:manager')->prefix('manager')->group(function () {
         Route::put('teachers/{teacher}', [SchoolTeacherController::class, 'update']);
         Route::delete('teachers/{teacher}', [SchoolTeacherController::class, 'destroy']);
     });
+    Route::apiResource('success-ratings', SchoolSuccessRate::class);
     Route::post('logout', [ManagerAuthController::class, 'logout']);
 
 });

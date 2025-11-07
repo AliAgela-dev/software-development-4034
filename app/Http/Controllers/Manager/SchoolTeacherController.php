@@ -13,7 +13,7 @@ class SchoolTeacherController extends Controller
 {
     public function index(School $school)
     {
-        if($school->id !== auth('api')->user()->schoolID) {
+        if($school->id !== auth('manager')->user()->schoolID) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
         $teachers = $school->teachers;
@@ -22,27 +22,27 @@ class SchoolTeacherController extends Controller
 
     public function store(AssignTeacherToSchoolRequest $request, School $school)
     {
-        if($school->id !== auth('api')->user()->schoolID) {
+        if($school->id !== auth('manager')->user()->schoolID) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
-        $school->teachers()->attach($request->teacherID, ['gradeID' => $request->gradeID]);
+        $school->teachers()->attach($request->teacherID, ['gradeID' => $request->gradeID, 'year' => $request->year]);
 
         return response()->json(['message' => 'Teacher assigned successfully.']);
     }
 
     public function update(UpdateSchoolTeacherRequest $request, School $school, Teacher $teacher)
     {
-        if($school->id !== auth('api')->user()->schoolID) {
+        if($school->id !== auth('manager')->user()->schoolID) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
-        $school->teachers()->updateExistingPivot($teacher->id, ['gradeID' => $request->gradeID]);
+        $school->teachers()->updateExistingPivot($teacher->id, $request->validated());
 
         return response()->json(['message' => 'Teacher assignment updated successfully.']);
     }
 
     public function destroy(School $school, Teacher $teacher)
     {
-        if($school->id !== auth('api')->user()->schoolID) {
+        if($school->id !== auth('manager')->user()->schoolID) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
