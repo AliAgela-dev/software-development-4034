@@ -1,167 +1,412 @@
-API Documentation: Roles & Capabilities
+# School Management API
 
-This document outlines the different user roles in this API, what each role can do, and the endpoints they have access to.
+A comprehensive REST API built with Laravel for managing schools, teachers, students, grades, fees, ratings, and comments. The system supports three types of users: Admin, Manager, and Regular Users.
 
-The application is built around three main user roles:
+---
 
-#Admin: The super-user with full system-wide control.
+## Table of Contents
 
-#Manager: A school-specific administrator who manages their assigned school's data.
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Database Setup](#database-setup)
+- [Running the Application](#running-the-application)
+- [API Testing with Postman](#api-testing-with-postman)
+- [Default Credentials](#default-credentials)
+- [API Endpoints Overview](#api-endpoints-overview)
 
-#User: The general public user (e.g., student, parent) who can rate and comment on schools.
+---
 
-1. Admin
+## Features
 
-The Admin is the highest-level entity, responsible for setting up the core data of the application.
+### Admin Features
+- Manage schools (CRUD operations)
+- Manage teachers (CRUD operations)
+- Manage managers (CRUD operations)
+- View school success ratings
 
-Authentication
+### Manager Features
+- Manage grades and fees for their school
+- Assign teachers to their school
+- Manage success ratings for their school
+- View school statistics
 
-#Login: POST /api/admin/login
+### User Features
+- Register and login
+- Rate schools (1-5 stars)
+- Comment on schools
+- Personal notes management
 
-Uses phone_number and password for credentials.
+---
 
-Key Responsibilities & Endpoints
+## Requirements
 
-Admins have system-wide Create, Read, Update, and Delete (CRUD) privileges on the foundational models:
+Before you begin, ensure you have the following installed:
 
-#Manage Schools:
+- **PHP** >= 8.1
+- **Composer** >= 2.x
+- **MySQL** >= 5.7 or **MariaDB** >= 10.3
+- **Laravel** 11.x (will be installed via Composer)
+- **Postman** (for API testing)
 
-#POST /api/admin/schools (Create a new school)
+---
 
-#GET /api/admin/schools (View all schools)
+## Installation
 
-#GET /api/admin/schools/{school} (View a specific school)
+### Step 1: Clone the Repository
 
-#PUT /api/admin/schools/{school} (Update a school)
+```bash
+git clone <your-repository-url>
+cd <project-folder>
+```
 
-#DELETE /api/admin/schools/{school} (Delete a school)
+### Step 2: Install Dependencies
 
-#Manage Managers:
+```bash
+composer install
+```
 
-#POST /api/admin/managers (Create a new manager and assign them to a school)
+### Step 3: Environment Configuration
 
-#GET /api/admin/managers (View all managers)
+1. Copy the `.env.example` file to `.env`:
 
-#GET /api/admin/managers/{manager} (View a specific manager)
+```bash
+cp .env.example .env
+```
 
-#PUT /api/admin/managers/{manager} (Update a manager)
+2. Open the `.env` file and configure your database settings:
 
-#DELETE /api/admin/managers/{manager} (Delete a manager)
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=school_management
+DB_USERNAME=root
+DB_PASSWORD=your_password
+```
 
-#Manage Teachers:
+### Step 4: Generate Application Key
 
-#POST /api/admin/teachers (Create a new teacher in the system)
+```bash
+php artisan key:generate
+```
 
-#GET /api/admin/teachers (View all teachers)
+### Step 5: Configure JWT Secret
 
-#GET /api/admin/teachers/{teacher} (View a specific teacher)
+```bash
+php artisan jwt:secret
+```
 
-#PUT /api/admin/teachers/{teacher} (Update a teacher)
+This will add the `JWT_SECRET` to your `.env` file.
 
-#DELETE /api/admin/teachers/{teacher} (Delete a teacher)
+---
 
-#View School Success:
+## Database Setup
 
-#GET /api/admin/school-success-rate (Read-only access to see all success ratings)
+### Step 1: Create Database
 
-#2. Manager
+Create a new database in MySQL/MariaDB:
 
-The Manager is a mid-level entity responsible for managing the day-to-day data of a single, specific school they are assigned to.
+```sql
+CREATE DATABASE school_management;
+```
 
-Authentication
+Or use your MySQL client/phpMyAdmin to create the database.
 
-#Login: POST /api/manager/login
+### Step 2: Run Migrations
 
-Uses phone_number and password for credentials.
+Execute the migrations to create all necessary tables:
 
-Key Responsibilities & Endpoints
+```bash
+php artisan migrate
+```
 
-Managers manage the entities related to their assigned school:
+This will create the following tables:
+- `admins`
+- `users`
+- `managers`
+- `schools`
+- `teachers`
+- `grades`
+- `fees`
+- `ratings`
+- `comments`
+- `notes`
+- `success_ratings`
+- `schools_teachers` (pivot table)
 
-Manage Grades:
+### Step 3: Seed the Database
 
-#POST /api/manager/grades (Create a new grade level, e.g., "Grade 10")
+Run the seeders to populate the database with initial data:
 
-#GET /api/manager/grades (View all grades)
+```bash
+php artisan db:seed
+```
 
-#GET /api/manager/grades/{grade} (View a specific grade)
+This will create:
+- 1 Admin user
+- 1 School
+- 1 Manager
+- 1 Grade
+- 1 Teacher
+- 1 Fee
+- 1 Regular User
+- 1 Rating
+- 1 Comment
+- 1 School-Teacher assignment
 
-#PUT /api/manager/grades/{grade} (Update a grade)
+**Note:** If you need to reset and reseed the database:
 
-#DELETE /api/manager/grades/{grade} (Delete a grade)
+```bash
+php artisan migrate:fresh --seed
+```
 
-#Manage School Fees:
+⚠️ **Warning:** This will drop all tables and recreate them!
 
-#POST /api/manager/fees (Set a fee for a specific grade at their school)
+---
 
-#GET /api/manager/fees (View all fees for their school)
+## Running the Application
 
-#GET /api/manager/fees/{fee} (View a specific fee)
+### Start the Laravel Development Server
 
-#PUT /api/manager/fees/{fee} (Update a fee)
+```bash
+php artisan serve
+```
 
-#DELETE /api/manager/fees/{fee} (Delete a fee)
+The application will be available at: `http://localhost:8000`
 
-#Manage Teacher Assignments:
+### API Base URL
 
-#POST /api/manager/schools/{school}/teachers (Assign an existing teacher to their school and a specific grade)
+All API endpoints are prefixed with `/api`:
 
-#GET /api/manager/schools/{school}/teachers (View all teachers assigned to their school)
+```
+http://localhost:8000/api
+```
 
-#PUT /api/manager/schools/{school}/teachers/{teacher} (Update a teacher's assignment, e.g., change their grade)
+---
 
-#DELETE /api/manager/schools/{school}/teachers/{teacher} (Remove a teacher from their school)
+## API Testing with Postman
 
-#Manage School Success Ratings:
+### Step 1: Import the Postman Collection
 
-#POST /api/manager/success-ratings (Create/Report a new success rating for their school for a given year)
+1. Open **Postman**
+2. Click on **Import** button (top left)
+3. Select **Raw text** tab
+4. Paste the entire JSON collection (provided separately)
+5. Click **Import**
 
-#GET /api/manager/success-ratings (View all success ratings for their school)
+### Step 2: Configure Environment Variables
 
-#GET /api/manager/success-ratings/{rating} (View a specific rating)
+The collection includes pre-configured variables:
 
-#PUT /api/manager/success-ratings/{rating} (Update a rating)
+- `base_url`: `http://localhost:8000/api`
+- `admin_token`: (auto-filled after admin login)
+- `manager_token`: (auto-filled after manager login)
+- `user_token`: (auto-filled after user login)
 
-#DELETE /api/manager/success-ratings/{rating} (Delete a rating)
+If your server runs on a different port, update the `base_url`:
 
-#3. User (Public)
+1. Click on the collection name
+2. Go to **Variables** tab
+3. Update the `base_url` value
+4. Click **Save**
 
-The User is the public-facing entity (e.g., parent, student) who can register, login, and provide feedback on schools.
+### Step 3: Authentication Flow
 
-Authentication
+The collection automatically handles JWT tokens. Here's how to use it:
 
-R#egister: POST /api/user/register
+#### For Admin:
+1. Navigate to: **Admin → Auth → Login**
+2. Click **Send**
+3. The `admin_token` is automatically saved
+4. All subsequent admin requests will use this token
 
-Uses name, email, and password.
+#### For Manager:
+1. Navigate to: **Manager → Auth → Login**
+2. Click **Send**
+3. The `manager_token` is automatically saved
 
-#Login: POST /api/user/login
+#### For User:
+1. Navigate to: **User → Auth → Login**
+2. Click **Send**
+3. The `user_token` is automatically saved
 
-Uses email and password.
+### Step 4: Testing Endpoints
 
-Key Responsibilities & Endpoints
+Now you can test any endpoint:
 
-Users can view school data and contribute their own opinions via ratings and comments:
+1. Select an endpoint from the collection
+2. Click **Send**
+3. View the response
 
-#Manage Ratings:
+**Example workflow:**
+```
+1. Admin Login → Creates/Gets token
+2. Admin → Schools → Get All Schools → View all schools
+3. Admin → Teachers → Create Teacher → Add new teacher
+```
 
-#POST /api/user/ratings (Create a new rating for a school)
+---
 
-#GET /api/user/ratings (View all ratings)
+## Default Credentials
 
-#GET /api/user/ratings/{rating} (View a specific rating)
+### Admin Account
+```
+Phone Number: 1234567890
+Password: password
+```
+
+### Manager Account
+```
+Phone Number: 1234567890
+Password: password
+```
 
-#PUT /api/user/ratings/{rating} (Update their own rating)
+### User Account
+```
+Email: user@example.com
+Password: password
+```
 
-#DELETE /api/user/ratings/{rating} (Delete their own rating)
+---
 
-#Manage Comments:
+## API Endpoints Overview
 
-#POST /api/user/comments (Create a new comment for a school)
+### Public Endpoints (No Authentication Required)
+```
+POST   /api/admin/login          - Admin login
+POST   /api/manager/login        - Manager login
+POST   /api/user/login           - User login
+POST   /api/user/register        - User registration
+```
 
-#GET /api/user/comments (View all comments)
+### Admin Endpoints (Requires Admin Token)
+```
+POST   /api/admin/logout                    - Logout
+GET    /api/admin/managers                  - Get all managers
+POST   /api/admin/managers                  - Create manager
+GET    /api/admin/managers/{id}             - Get manager by ID
+PUT    /api/admin/managers/{id}             - Update manager
+DELETE /api/admin/managers/{id}             - Delete manager
 
-#GET /api/user/comments/{comment} (View a specific comment)
+GET    /api/admin/schools                   - Get all schools
+POST   /api/admin/schools                   - Create school
+GET    /api/admin/schools/{id}              - Get school by ID
+PUT    /api/admin/schools/{id}              - Update school
+DELETE /api/admin/schools/{id}              - Delete school
 
-#PUT /api/user/comments/{comment} (Update their own comment)
+GET    /api/admin/teachers                  - Get all teachers
+POST   /api/admin/teachers                  - Create teacher
+GET    /api/admin/teachers/{id}             - Get teacher by ID
+PUT    /api/admin/teachers/{id}             - Update teacher
+DELETE /api/admin/teachers/{id}             - Delete teacher
 
-#DELETE /api/user/comments/{comment} (Delete their own comment)
+GET    /api/admin/school-success-rate       - Get all success ratings
+GET    /api/admin/school-success-rate/{id}  - Get success rating by school
+```
+
+### Manager Endpoints (Requires Manager Token)
+```
+POST   /api/manager/logout                  - Logout
+
+GET    /api/manager/grades                  - Get all grades
+POST   /api/manager/grades                  - Create grade
+GET    /api/manager/grades/{id}             - Get grade by ID
+PUT    /api/manager/grades/{id}             - Update grade
+DELETE /api/manager/grades/{id}             - Delete grade
+
+GET    /api/manager/fees                    - Get school fees
+POST   /api/manager/fees                    - Create fee
+GET    /api/manager/fees/{id}               - Get fee by ID
+PUT    /api/manager/fees/{id}               - Update fee
+DELETE /api/manager/fees/{id}               - Delete fee
+
+GET    /api/manager/schools/teachers        - Get school teachers
+POST   /api/manager/schools/teachers        - Assign teacher to school
+PUT    /api/manager/schools/teachers/{id}   - Update teacher assignment
+DELETE /api/manager/schools/teachers/{id}   - Remove teacher from school
+
+GET    /api/manager/success-ratings         - Get success ratings
+POST   /api/manager/success-ratings         - Create success rating
+GET    /api/manager/success-ratings/{id}    - Get success rating by ID
+PUT    /api/manager/success-ratings/{id}    - Update success rating
+DELETE /api/manager/success-ratings/{id}    - Delete success rating
+```
+
+### User Endpoints (Requires User Token)
+```
+POST   /api/user/logout                     - Logout
+GET    /api/user/me                         - Get current user info
+
+GET    /api/user/ratings                    - Get my ratings
+POST   /api/user/ratings                    - Create rating
+GET    /api/user/ratings/{id}               - Get rating by ID
+PUT    /api/user/ratings/{id}               - Update rating
+DELETE /api/user/ratings/{id}               - Delete rating
+
+GET    /api/user/comments                   - Get my comments
+POST   /api/user/comments                   - Create comment
+GET    /api/user/comments/{id}              - Get comment by ID
+PUT    /api/user/comments/{id}              - Update comment
+DELETE /api/user/comments/{id}              - Delete comment
+
+GET    /api/user/notes                      - Get my notes
+POST   /api/user/notes                      - Create note
+GET    /api/user/notes/{id}                 - Get note by ID
+PUT    /api/user/notes/{id}                 - Update note
+DELETE /api/user/notes/{id}                 - Delete note
+```
+
+---
+
+## Common Issues & Troubleshooting
+
+### Issue: "SQLSTATE[HY000] [1045] Access denied"
+**Solution:** Check your database credentials in the `.env` file.
+
+### Issue: "JWT secret not set"
+**Solution:** Run `php artisan jwt:secret`
+
+### Issue: "Class not found"
+**Solution:** Run `composer dump-autoload`
+
+### Issue: "Token expired"
+**Solution:** Login again to get a new token
+
+### Issue: Unauthorized (401)
+**Solution:** Ensure you're using the correct token for the role
+
+---
+
+## Additional Commands
+
+### Clear Application Cache
+```bash
+php artisan cache:clear
+php artisan config:clear
+php artisan route:clear
+```
+
+### View All Routes
+```bash
+php artisan route:list
+```
+
+### Run Tests (if available)
+```bash
+php artisan test
+```
+
+---
+
+## Support
+
+For issues and questions, please refer to the Laravel documentation:
+- [Laravel Documentation](https://laravel.com/docs)
+- [JWT-Auth Documentation](https://jwt-auth.readthedocs.io/)
+
+---
+
+## License
+
+This project is open-sourced software licensed under the MIT license.
