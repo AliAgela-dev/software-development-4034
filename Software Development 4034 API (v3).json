@@ -1,6 +1,6 @@
 {
 	"info": {
-		"name": "School Management API",
+		"name": "Software Development 4034 API (v3)",
 		"description": "Complete API collection for School Management System with Admin, Manager, and User roles",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
