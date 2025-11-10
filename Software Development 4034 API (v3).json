@@ -1,12 +1,31 @@
 {
 	"info": {
-		"_postman_id": "8bddb17b-8a2d-4cb9-aa95-c3ab57fc77cd",
-		"name": "Software Development 4034 API (v3)",
-		"description": "API collection organized by user roles (Admin, Manager, User) including new Auth and SuccessRating routes.",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "36422747",
-		"_collection_link": "https://lati55.postman.co/workspace/LATI-Workspace~29efae8a-da87-4349-8539-116ab69b84f2/collection/36422747-8bddb17b-8a2d-4cb9-aa95-c3ab57fc77cd?action=share&source=collection_link&creator=36422747"
+		"name": "School Management API",
+		"description": "Complete API collection for School Management System with Admin, Manager, and User roles",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000/api",
+			"type": "string"
+		},
+		{
+			"key": "admin_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "manager_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_token",
+			"value": "",
+			"type": "string"
+		}
+	],
 	"item": [
 		{
 			"name": "Admin",
@@ -15,14 +34,24 @@
 					"name": "Auth",
 					"item": [
 						{
-							"name": "Admin Login",
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {",
+											"    var jsonData = pm.response.json();",
+											"    pm.collectionVariables.set(\"admin_token\", jsonData.access_token);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [
-									{
-										"key": "Accept",
-										"value": "application/json"
-									},
 									{
 										"key": "Content-Type",
 										"value": "application/json"
@@ -30,61 +59,41 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"password\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									"raw": "{\n    \"phone_number\": \"1234567890\",\n    \"password\": \"password\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/admin/login",
+									"raw": "{{base_url}}/admin/login",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"admin",
 										"login"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
-							"name": "Admin Logout",
+							"name": "Logout",
 							"request": {
 								"method": "POST",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
-									},
-									{
-										"key": "Content-Type",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
 									}
 								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"name\": \"Admin User\",\n    \"email\": \"admin@example.com\",\n    \"password\": \"password\",\n    \"password_confirmation\": \"password\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
 								"url": {
-									"raw": "{{baseUrl}}/admin/logout",
+									"raw": "{{base_url}}/admin/logout",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"admin",
 										"logout"
 									]
 								}
-							},
-							"response": []
+							}
 						}
 					]
 				},
@@ -97,22 +106,21 @@
 								"method": "GET",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/admin/managers",
+									"raw": "{{base_url}}/admin/managers",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"admin",
 										"managers"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Create Manager",
@@ -120,8 +128,8 @@
 								"method": "POST",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
 									},
 									{
 										"key": "Content-Type",
@@ -130,40 +138,34 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"New Manager\",\n    \"username\": \"manager@example.com\",\n    \"phone_number\":\"1234561230\",\n    \"password\": \"password\",\n    \"SchoolId\": 2\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									"raw": "{\n    \"name\": \"New Manager\",\n    \"username\": \"newmanager\",\n    \"phone_number\": \"9876543210\",\n    \"password\": \"password123\",\n    \"schoolID\": 1\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/admin/managers",
+									"raw": "{{base_url}}/admin/managers",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"admin",
 										"managers"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
-							"name": "Get Manager",
+							"name": "Get Manager by ID",
 							"request": {
 								"method": "GET",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/admin/managers/1",
+									"raw": "{{base_url}}/admin/managers/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"admin",
@@ -171,8 +173,7 @@
 										"1"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Update Manager",
@@ -180,8 +181,8 @@
 								"method": "PUT",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
 									},
 									{
 										"key": "Content-Type",
@@ -190,17 +191,12 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"Updated Manager Name\",\n    \"email\": \"updated.manager@example.com\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									"raw": "{\n    \"name\": \"Updated Manager Name\",\n    \"phone_number\": \"9876543211\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/admin/managers/1",
+									"raw": "{{base_url}}/admin/managers/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"admin",
@@ -208,8 +204,7 @@
 										"1"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Delete Manager",
@@ -217,14 +212,14 @@
 								"method": "DELETE",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/admin/managers/1",
+									"raw": "{{base_url}}/admin/managers/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"admin",
@@ -232,8 +227,7 @@
 										"1"
 									]
 								}
-							},
-							"response": []
+							}
 						}
 					]
 				},
@@ -246,22 +240,21 @@
 								"method": "GET",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/admin/schools",
+									"raw": "{{base_url}}/admin/schools",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"admin",
 										"schools"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Create School",
@@ -269,8 +262,8 @@
 								"method": "POST",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
 									},
 									{
 										"key": "Content-Type",
@@ -279,40 +272,34 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"New School\",\n    \"address\": \"123 Main St\",\n    \"managerID\": 1\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									"raw": "{\n    \"name\": \"New School\",\n    \"address\": \"456 School Ave\",\n    \"status\": \"active\",\n    \"type\": \"male\",\n    \"level\": \"secondary\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/admin/schools",
+									"raw": "{{base_url}}/admin/schools",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"admin",
 										"schools"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
-							"name": "Get School",
+							"name": "Get School by ID",
 							"request": {
 								"method": "GET",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/admin/schools/1",
+									"raw": "{{base_url}}/admin/schools/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"admin",
@@ -320,8 +307,7 @@
 										"1"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Update School",
@@ -329,8 +315,8 @@
 								"method": "PUT",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
 									},
 									{
 										"key": "Content-Type",
@@ -339,17 +325,12 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"Updated School Name\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									"raw": "{\n    \"name\": \"Updated School Name\",\n    \"status\": \"inactive\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/admin/schools/1",
+									"raw": "{{base_url}}/admin/schools/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"admin",
@@ -357,8 +338,7 @@
 										"1"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Delete School",
@@ -366,14 +346,14 @@
 								"method": "DELETE",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/admin/schools/1",
+									"raw": "{{base_url}}/admin/schools/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"admin",
@@ -381,8 +361,7 @@
 										"1"
 									]
 								}
-							},
-							"response": []
+							}
 						}
 					]
 				},
@@ -395,22 +374,21 @@
 								"method": "GET",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/admin/teachers",
+									"raw": "{{base_url}}/admin/teachers",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"admin",
 										"teachers"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Create Teacher",
@@ -418,8 +396,8 @@
 								"method": "POST",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
 									},
 									{
 										"key": "Content-Type",
@@ -428,40 +406,34 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"New Teacher\",\n    \"email\": \"teacher@example.com\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									"raw": "{\n    \"name\": \"New Teacher\",\n    \"subject\": \"Science\",\n    \"experience\": 3\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/admin/teachers",
+									"raw": "{{base_url}}/admin/teachers",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"admin",
 										"teachers"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
-							"name": "Get Teacher",
+							"name": "Get Teacher by ID",
 							"request": {
 								"method": "GET",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/admin/teachers/1",
+									"raw": "{{base_url}}/admin/teachers/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"admin",
@@ -469,8 +441,7 @@
 										"1"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Update Teacher",
@@ -478,8 +449,8 @@
 								"method": "PUT",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
 									},
 									{
 										"key": "Content-Type",
@@ -488,17 +459,12 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"Updated Teacher Name\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									"raw": "{\n    \"name\": \"Updated Teacher Name\",\n    \"experience\": 5\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/admin/teachers/1",
+									"raw": "{{base_url}}/admin/teachers/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"admin",
@@ -506,8 +472,7 @@
 										"1"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Delete Teacher",
@@ -515,14 +480,14 @@
 								"method": "DELETE",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/admin/teachers/1",
+									"raw": "{{base_url}}/admin/teachers/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"admin",
@@ -530,41 +495,61 @@
 										"1"
 									]
 								}
-							},
-							"response": []
+							}
 						}
 					]
 				},
 				{
-					"name": "School Success Rate",
+					"name": "Success Ratings",
 					"item": [
 						{
-							"name": "Get All School Success Rates",
+							"name": "Get All Success Ratings",
 							"request": {
 								"method": "GET",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/admin/school-success-rate",
+									"raw": "{{base_url}}/admin/school-success-rate",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"admin",
 										"school-success-rate"
 									]
 								}
-							},
-							"response": []
+							}
+						},
+						{
+							"name": "Get Success Rating by School ID",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/admin/school-success-rate/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"school-success-rate",
+										"1"
+									]
+								}
+							}
 						}
 					]
 				}
-			],
-			"description": "Routes accessible to Admins"
+			]
 		},
 		{
 			"name": "Manager",
@@ -573,14 +558,24 @@
 					"name": "Auth",
 					"item": [
 						{
-							"name": "Manager Login",
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {",
+											"    var jsonData = pm.response.json();",
+											"    pm.collectionVariables.set(\"manager_token\", jsonData.access_token);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [
-									{
-										"key": "Accept",
-										"value": "application/json"
-									},
 									{
 										"key": "Content-Type",
 										"value": "application/json"
@@ -588,61 +583,41 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"phone_number\": \"1234561230\",\n    \"password\": \"password\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									"raw": "{\n    \"phone_number\": \"1234567890\",\n    \"password\": \"password\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/manager/login",
+									"raw": "{{base_url}}/manager/login",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"manager",
 										"login"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
-							"name": "Manager logout",
+							"name": "Logout",
 							"request": {
 								"method": "POST",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
-									},
-									{
-										"key": "Content-Type",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{manager_token}}"
 									}
 								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"name\": \"Manager User\",\n    \"email\": \"manager@example.com\",\n    \"password\": \"password\",\n    \"password_confirmation\": \"password\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
 								"url": {
-									"raw": "{{baseUrl}}/manager/logout",
+									"raw": "{{base_url}}/manager/logout",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"manager",
 										"logout"
 									]
 								}
-							},
-							"response": []
+							}
 						}
 					]
 				},
@@ -655,22 +630,21 @@
 								"method": "GET",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{manager_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/manager/grades",
+									"raw": "{{base_url}}/manager/grades",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"manager",
 										"grades"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Create Grade",
@@ -678,8 +652,8 @@
 								"method": "POST",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{manager_token}}"
 									},
 									{
 										"key": "Content-Type",
@@ -688,40 +662,34 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"Grade 1\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									"raw": "{\n    \"name\": \"Grade 2\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/manager/grades",
+									"raw": "{{base_url}}/manager/grades",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"manager",
 										"grades"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
-							"name": "Get Grade",
+							"name": "Get Grade by ID",
 							"request": {
 								"method": "GET",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{manager_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/manager/grades/1",
+									"raw": "{{base_url}}/manager/grades/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"manager",
@@ -729,8 +697,7 @@
 										"1"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Update Grade",
@@ -738,8 +705,8 @@
 								"method": "PUT",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{manager_token}}"
 									},
 									{
 										"key": "Content-Type",
@@ -748,17 +715,12 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"Grade 1 Updated\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									"raw": "{\n    \"name\": \"Grade 1 Updated\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/manager/grades/1",
+									"raw": "{{base_url}}/manager/grades/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"manager",
@@ -766,8 +728,7 @@
 										"1"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Delete Grade",
@@ -775,14 +736,14 @@
 								"method": "DELETE",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{manager_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/manager/grades/1",
+									"raw": "{{base_url}}/manager/grades/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"manager",
@@ -790,8 +751,7 @@
 										"1"
 									]
 								}
-							},
-							"response": []
+							}
 						}
 					]
 				},
@@ -804,22 +764,21 @@
 								"method": "GET",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{manager_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/manager/fees",
+									"raw": "{{base_url}}/manager/fees",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"manager",
 										"fees"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Create Fee",
@@ -827,8 +786,8 @@
 								"method": "POST",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{manager_token}}"
 									},
 									{
 										"key": "Content-Type",
@@ -837,49 +796,42 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"amount\": 1000,\n    \"schoolID\": 1,\n    \"gradeID\": 1\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									"raw": "{\n    \"gradeID\": 1,\n    \"amount\": 150.00\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/manager/fees",
+									"raw": "{{base_url}}/manager/fees",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"manager",
 										"fees"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
-							"name": "Get Fee",
+							"name": "Get Fee by ID",
 							"request": {
 								"method": "GET",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{manager_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/manager/fees/2",
+									"raw": "{{base_url}}/manager/fees/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"manager",
 										"fees",
-										"2"
+										"1"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Update Fee",
@@ -887,8 +839,8 @@
 								"method": "PUT",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{manager_token}}"
 									},
 									{
 										"key": "Content-Type",
@@ -897,26 +849,20 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"amount\": 1200\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									"raw": "{\n    \"amount\": 200.00\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/manager/fees/2",
+									"raw": "{{base_url}}/manager/fees/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"manager",
 										"fees",
-										"2"
+										"1"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Delete Fee",
@@ -924,14 +870,14 @@
 								"method": "DELETE",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{manager_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/manager/fees/1",
+									"raw": "{{base_url}}/manager/fees/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"manager",
@@ -939,8 +885,7 @@
 										"1"
 									]
 								}
-							},
-							"response": []
+							}
 						}
 					]
 				},
@@ -948,29 +893,27 @@
 					"name": "School Teachers",
 					"item": [
 						{
-							"name": "Get Teachers for School",
+							"name": "Get School Teachers",
 							"request": {
 								"method": "GET",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{manager_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/manager/schools/1/teachers",
+									"raw": "{{base_url}}/manager/schools/teachers",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"manager",
 										"schools",
-										"1",
 										"teachers"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Assign Teacher to School",
@@ -978,8 +921,8 @@
 								"method": "POST",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{manager_token}}"
 									},
 									{
 										"key": "Content-Type",
@@ -988,36 +931,29 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"teacherID\": 2,\n    \"gradeID\": 2,\n    \"year\":2\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									"raw": "{\n    \"teacherID\": 1,\n    \"gradeID\": 1,\n    \"year\": 2024\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/manager/schools/2/teachers",
+									"raw": "{{base_url}}/manager/schools/teachers",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"manager",
 										"schools",
-										"2",
 										"teachers"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
-							"name": "Update Teacher Assignment",
+							"name": "Update School Teacher Assignment",
 							"request": {
 								"method": "PUT",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{manager_token}}"
 									},
 									{
 										"key": "Content-Type",
@@ -1026,28 +962,21 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"gradeID\": 2\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									"raw": "{\n    \"gradeID\": 2,\n    \"year\": 2025\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/manager/schools/1/teachers/1",
+									"raw": "{{base_url}}/manager/schools/teachers/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"manager",
 										"schools",
-										"1",
 										"teachers",
 										"1"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Remove Teacher from School",
@@ -1055,28 +984,25 @@
 								"method": "DELETE",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{manager_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/manager/schools/1/teachers/1",
+									"raw": "{{base_url}}/manager/schools/teachers/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"manager",
 										"schools",
-										"1",
 										"teachers",
 										"1"
 									]
 								}
-							},
-							"response": []
+							}
 						}
-					],
-					"description": "Assigning teachers to schools"
+					]
 				},
 				{
 					"name": "Success Ratings",
@@ -1087,22 +1013,21 @@
 								"method": "GET",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{manager_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/manager/success-ratings",
+									"raw": "{{base_url}}/manager/success-ratings",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"manager",
 										"success-ratings"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Create Success Rating",
@@ -1110,8 +1035,8 @@
 								"method": "POST",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{manager_token}}"
 									},
 									{
 										"key": "Content-Type",
@@ -1120,40 +1045,34 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"gradeID\": 2,\n    \"total_students\": 10,\n    \"A\":2,\n    \"B\":2,\n    \"C\":3,\n    \"D\":3\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									"raw": "{\n    \"gradeID\": 1,\n    \"total_students\": 100,\n    \"A\": 20,\n    \"B\": 30,\n    \"C\": 25,\n    \"D\": 15\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/manager/success-ratings",
+									"raw": "{{base_url}}/manager/success-ratings",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"manager",
 										"success-ratings"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
-							"name": "Get Success Rating",
+							"name": "Get Success Rating by ID",
 							"request": {
 								"method": "GET",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{manager_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/manager/success-ratings/1",
+									"raw": "{{base_url}}/manager/success-ratings/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"manager",
@@ -1161,8 +1080,7 @@
 										"1"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Update Success Rating",
@@ -1170,8 +1088,8 @@
 								"method": "PUT",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{manager_token}}"
 									},
 									{
 										"key": "Content-Type",
@@ -1180,17 +1098,12 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"rating\": 98\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									"raw": "{\n    \"total_students\": 120,\n    \"A\": 25,\n    \"B\": 35,\n    \"C\": 30,\n    \"D\": 20\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/manager/success-ratings/1",
+									"raw": "{{base_url}}/manager/success-ratings/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"manager",
@@ -1198,8 +1111,7 @@
 										"1"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Delete Success Rating",
@@ -1207,14 +1119,14 @@
 								"method": "DELETE",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{manager_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/manager/success-ratings/1",
+									"raw": "{{base_url}}/manager/success-ratings/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"manager",
@@ -1222,13 +1134,11 @@
 										"1"
 									]
 								}
-							},
-							"response": []
+							}
 						}
 					]
 				}
-			],
-			"description": "Routes accessible to Managers"
+			]
 		},
 		{
 			"name": "User",
@@ -1237,14 +1147,10 @@
 					"name": "Auth",
 					"item": [
 						{
-							"name": "User Login",
+							"name": "Register",
 							"request": {
 								"method": "POST",
 								"header": [
-									{
-										"key": "Accept",
-										"value": "application/json"
-									},
 									{
 										"key": "Content-Type",
 										"value": "application/json"
@@ -1252,61 +1158,103 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"password\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									"raw": "{\n    \"name\": \"New User\",\n    \"email\": \"newuser@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/user/login",
+									"raw": "{{base_url}}/user/register",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"register"
+									]
+								}
+							}
+						},
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {",
+											"    var jsonData = pm.response.json();",
+											"    pm.collectionVariables.set(\"user_token\", jsonData.access_token);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"password\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/user/login",
+									"host": [
+										"{{base_url}}"
 									],
 									"path": [
 										"user",
 										"login"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
-							"name": "User logout",
+							"name": "Get Current User",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/user/me",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"me"
+									]
+								}
+							}
+						},
+						{
+							"name": "Logout",
 							"request": {
 								"method": "POST",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
-									},
-									{
-										"key": "Content-Type",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
 									}
 								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"name\": \"Normal User\",\n    \"email\": \"user@example.com\",\n    \"password\": \"password\",\n    \"password_confirmation\": \"password\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
 								"url": {
-									"raw": "{{baseUrl}}/user/regester",
+									"raw": "{{base_url}}/user/logout",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"user",
-										"regester"
+										"logout"
 									]
 								}
-							},
-							"response": []
+							}
 						}
 					]
 				},
@@ -1314,27 +1262,26 @@
 					"name": "Ratings",
 					"item": [
 						{
-							"name": "Get All Ratings",
+							"name": "Get My Ratings",
 							"request": {
 								"method": "GET",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/user/ratings",
+									"raw": "{{base_url}}/user/ratings",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"user",
 										"ratings"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Create Rating",
@@ -1342,8 +1289,8 @@
 								"method": "POST",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
 									},
 									{
 										"key": "Content-Type",
@@ -1352,40 +1299,34 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"rating\": 5,\n    \"schoolID\": 1,\n    \"userID\": 1\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									"raw": "{\n    \"schoolID\": 1,\n    \"rating\": 5\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/user/ratings",
+									"raw": "{{base_url}}/user/ratings",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"user",
 										"ratings"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
-							"name": "Get Rating",
+							"name": "Get Rating by ID",
 							"request": {
 								"method": "GET",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/user/ratings/1",
+									"raw": "{{base_url}}/user/ratings/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"user",
@@ -1393,8 +1334,7 @@
 										"1"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Update Rating",
@@ -1402,8 +1342,8 @@
 								"method": "PUT",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
 									},
 									{
 										"key": "Content-Type",
@@ -1412,17 +1352,12 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"rating\": 4\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									"raw": "{\n    \"rating\": 4\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/user/ratings/1",
+									"raw": "{{base_url}}/user/ratings/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"user",
@@ -1430,8 +1365,7 @@
 										"1"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Delete Rating",
@@ -1439,14 +1373,14 @@
 								"method": "DELETE",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/user/ratings/1",
+									"raw": "{{base_url}}/user/ratings/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"user",
@@ -1454,8 +1388,7 @@
 										"1"
 									]
 								}
-							},
-							"response": []
+							}
 						}
 					]
 				},
@@ -1463,27 +1396,26 @@
 					"name": "Comments",
 					"item": [
 						{
-							"name": "Get All Comments",
+							"name": "Get My Comments",
 							"request": {
 								"method": "GET",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/user/comments",
+									"raw": "{{base_url}}/user/comments",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"user",
 										"comments"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Create Comment",
@@ -1491,8 +1423,8 @@
 								"method": "POST",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
 									},
 									{
 										"key": "Content-Type",
@@ -1501,40 +1433,34 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"comment\": \"This is a great school!\",\n    \"schoolID\": 2\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									"raw": "{\n    \"schoolID\": 1,\n    \"comment\": \"This is a great school!\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/user/comments",
+									"raw": "{{base_url}}/user/comments",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"user",
 										"comments"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
-							"name": "Get Comment",
+							"name": "Get Comment by ID",
 							"request": {
 								"method": "GET",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/user/comments/1",
+									"raw": "{{base_url}}/user/comments/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"user",
@@ -1542,8 +1468,7 @@
 										"1"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Update Comment",
@@ -1551,8 +1476,8 @@
 								"method": "PUT",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
 									},
 									{
 										"key": "Content-Type",
@@ -1561,17 +1486,12 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"comment\": \"This is an updated comment!\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									"raw": "{\n    \"comment\": \"Updated comment text\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/user/comments/1",
+									"raw": "{{base_url}}/user/comments/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"user",
@@ -1579,8 +1499,7 @@
 										"1"
 									]
 								}
-							},
-							"response": []
+							}
 						},
 						{
 							"name": "Delete Comment",
@@ -1588,14 +1507,14 @@
 								"method": "DELETE",
 								"header": [
 									{
-										"key": "Accept",
-										"value": "application/json"
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/user/comments/1",
+									"raw": "{{base_url}}/user/comments/1",
 									"host": [
-										"{{baseUrl}}"
+										"{{base_url}}"
 									],
 									"path": [
 										"user",
@@ -1603,53 +1522,145 @@
 										"1"
 									]
 								}
-							},
-							"response": []
+							}
+						}
+					]
+				},
+				{
+					"name": "Notes",
+					"item": [
+						{
+							"name": "Get My Notes",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/user/notes",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"notes"
+									]
+								}
+							}
+						},
+						{
+							"name": "Create Note",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"content\": \"This is my personal note.\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/user/notes",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"notes"
+									]
+								}
+							}
+						},
+						{
+							"name": "Get Note by ID",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/user/notes/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"notes",
+										"1"
+									]
+								}
+							}
+						},
+						{
+							"name": "Update Note",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"content\": \"Updated note content\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/user/notes/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"notes",
+										"1"
+									]
+								}
+							}
+						},
+						{
+							"name": "Delete Note",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/user/notes/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"notes",
+										"1"
+									]
+								}
+							}
 						}
 					]
 				}
-			],
-			"description": "Routes accessible to general Users"
-		}
-	],
-	"auth": {
-		"type": "bearer",
-		"bearer": [
-			{
-				"key": "token",
-				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2FkbWluL2xvZ2luIiwiaWF0IjoxNzYyNTQyMTk3LCJleHAiOjE3NjI1NDU3OTcsIm5iZiI6MTc2MjU0MjE5NywianRpIjoiOWxMb2xqaEFVMmp6R2h5ZSIsInN1YiI6IjEiLCJwcnYiOiJkZjg4M2RiOTdiZDA1ZWY4ZmY4NTA4MmQ2ODZjNDVlODMyZTU5M2E5In0.IYz5muV7CYW6qgUmxxTLGIu1IkM8avQsLfKmxe6cRe8",
-				"type": "string"
-			}
-		]
-	},
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"requests": {},
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"requests": {},
-				"exec": [
-					""
-				]
-			}
-		}
-	],
-	"variable": [
-		{
-			"key": "baseUrl",
-			"value": ""
+			]
 		}
 	]
 }
