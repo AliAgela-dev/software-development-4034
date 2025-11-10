@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Manager\AuthController as ManagerAuthController;
 use App\Http\Controllers\User\AuthController as UserAuthController;
 use App\Http\Controllers\Admin\SchoolSuccessRate as AdminSchoolSuccessRate;
+use App\Http\Controllers\User\UserNoteController ;
 
 
 Route::post('admin/login', [AdminAuthController::class, 'login']);
@@ -47,7 +48,9 @@ Route::middleware('auth:manager')->prefix('manager')->group(function () {
 Route::middleware('auth:api')->prefix('user')->group(function () {
     Route::apiResource('ratings', RatingController::class);
     Route::apiResource('comments', CommentController::class);
+    Route::get('me', [UserAuthController::class, 'me']);
     Route::post('logout', [UserAuthController::class, 'logout']);
+    Route::apiResource('notes', UserNoteController::class);
 });
 
 

@@ -57,6 +57,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Comment::class, 'userID');
     }
 
+    public function notes()
+    {
+        return $this->hasMany(Note::class, 'userID');
+    }
+
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      */
